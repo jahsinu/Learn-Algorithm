@@ -3,6 +3,17 @@ title: 3. データ構造
 tags: []
 ---
 
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script type="text/x-mathjax-config">
+ MathJax.Hub.Config({
+ tex2jax: {
+ inlineMath: [['$', '$'] ],
+ displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+ }
+ });
+</script>
+
 # データ構造
 
 ## データ構造とは
@@ -185,6 +196,135 @@ int main() {
             return -1;
         }
     }
+
+    return 0;
+}
+```
+
+## 連結リスト
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_C&lang=ja)
+
+### 回答
+
+連結リストをClassで実装したのが以下。  
+連結リストの先頭データは有効な値を持たないガードノードとする(下記ソース内の`nil`)。  
+ガードノードを用意することで、先頭、終端へのノード追加が容易になる。  
+また、最終ノードのnextとしてガードノードを設定しておくことで、ノード検索時にリストを1周したか判定しやすくなる。
+
+連結リストはリストの先頭、終端へのデータ追加が$O(1)$になるので高速に処理できる。  
+しかしデータの検索は1つずつ要素を辿る必要があるので$O(N)$の計算量が必要になる。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class linked_list {
+private:
+    struct node {
+        int key;
+        node *p_next;
+        node *p_prev;
+    };
+    int count;
+    node *nil;      // ガードノード
+
+public:
+    // コンストラクタ
+    linked_list() : count(0) {
+        nil = new node();       // コンストラクタでガードノード作成
+        nil->p_next = nil;
+        nil->p_prev = nil;
+    }
+    // デストラクタ
+    ~linked_list() {
+        node *cur = nil->p_next;
+        while (cur != nil) {
+            node *next = cur->p_next;
+            free(cur);
+            count--;
+            cur = next;
+        }
+    }
+    // 先頭へのデータ追加
+    int insert(int x) {
+        node *new_node = new node();
+        new_node->key = x;
+        new_node->p_next = nil->p_next;
+        new_node->p_prev = nil;
+        nil->p_next->p_prev = new_node;
+        nil->p_next = new_node;
+        return ++count;
+    }
+    // キーによる検索
+    node *list_search(int x) {
+        node *cur = nil->p_next;
+        // 1要素ずつ辿って検索する必要があるので計算量が
+        // O(N)になる。
+        while (cur != nil) {
+            node *next = cur->p_next;
+            if (cur->key == x) return cur;
+            cur = next;
+        }
+        return nullptr;
+    }
+    // ノード削除
+    int delete_node(node *del_node) {
+        if (del_node == nullptr) return count;
+        del_node->p_prev->p_next = del_node->p_next;
+        del_node->p_next->p_prev = del_node->p_prev;
+        free(del_node);
+        return --count;
+    }
+    // 先頭ノード削除
+    int delete_first() {
+        // 必ずガードノードの次が先頭ノード
+        return delete_node(nil->p_next);
+    }
+    // 終端ノード削除
+    int delete_last() {
+        // 必ずガードノードの前が終端ノード
+        return delete_node(nil->p_prev);
+    }
+    // 特定キーのノード削除
+    int delete_key(int x) {
+        return delete_node(list_search(x));
+    }
+    void print_list() {
+        node *cur = nil->p_next;
+        bool first = true;
+        while (cur != nil) {
+            if (!first) cout << " ";
+            first = false;
+            cout << cur->key;
+            cur = cur->p_next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int n;
+    cin >> n;
+
+    char command[16];
+    int  key;
+    linked_list my_list = linked_list();
+    for (int i = 0; i < n; i++) {
+        scanf("%s%d", command, &key);
+        if (strcmp(command, "insert") == 0) {
+            my_list.insert(key);
+        } else if (strcmp(command, "deleteFirst") == 0) {
+            my_list.delete_first();
+        } else if (strcmp(command, "deleteLast") == 0) {
+            my_list.delete_last();
+        } else {
+            my_list.delete_key(key);
+        }
+    }
+    my_list.print_list();
 
     return 0;
 }

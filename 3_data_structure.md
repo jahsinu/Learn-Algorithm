@@ -201,7 +201,7 @@ int main() {
 }
 ```
 
-## 連結リスト
+## 双方向連結リスト
 
 ### 問題
 
@@ -329,3 +329,206 @@ int main() {
     return 0;
 }
 ```
+
+## 標準ライブラリのデータ構造
+
+リスト、スタックやキューなどのデータ構造は多くの言語でライブラリや関数が提供されている。  
+ただしその特徴や計算量を知った上で使用することが重要。  
+
+C++ではSTL(Starndard Tmpllate Livrary)という標準ライブラリで提供される。  
+
+### stack
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    stack<int> S;
+
+    S.push(3);  // スタックに3を積む
+    S.push(7);  // スタックに7を積む
+    S.push(1);  // スタックに1を積む
+    cout << S.size() << " ";    // スタックサイズを出力  3
+
+    cout << S.top() << " ";     // スタック頂点を出力  1
+    S.pop();                    // スタック頂点の要素を削除
+
+    cout << S.top() << " ";     // 7
+    S.pop();
+
+    cout << S.top() << " ";     // 3
+
+    S.push(5);
+
+    cout << S.top() << " ";     // 5
+    S.pop();
+
+    cout << S.top() << endl;    // 3
+    return 0;
+}
+```
+
+`stack<int> S;`により、int型要素を管理するスタックが生成される。  
+`<>`で指定した型のデータを管理できる。  
+
+`stack`では以下の関数が定義されている(一部)。
+
+|関数名|機能|計算量|
+|---|---|---|
+|size()|スタックの要素数を返す|$O(1)$|
+|top()|スタックの頂点要素を返す|$O(1)$|
+|pop()|スタックの頂点要素を削除する|$O(1)$|
+|push(x)|スタックに要素`x`を追加する|$O(1)$|
+|empty()|スタックが空の時`true`を返す|$O(1)$|
+
+### queue
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    queue<string> Q;
+
+    Q.push("red");
+    Q.push("yellow");
+    Q.push("yellow");
+    Q.push("blue");
+
+    cout << Q.front() << " ";   // red
+    Q.pop();
+
+    cout << Q.front() << " ";   // yellow
+    Q.pop();
+
+    cout << Q.front() << " ";   // yellow
+    Q.pop();
+    
+    Q.push("green");
+
+    cout << Q.front() << " ";   // blue
+    Q.pop();
+
+    cout << Q.front() << endl;   // green
+    return 0;
+}
+```
+
+`queue<string> Q;`により、string型要素を管理するキューが生成される。  
+`queue`では以下の関数が定義されている(一部)。
+
+|関数名|機能|計算量|
+|---|---|---|
+|size()|キューの要素数を返す|$O(1)$|
+|front()|キューの先頭要素を返す|$O(1)$|
+|pop()|キューの先頭要素を削除する|$O(1)$|
+|push(x)|キューに要素`x`を追加する|$O(1)$|
+|empty()|キューが空の時`true`を返す|$O(1)$|
+
+### vector
+
+`vector`は要素追加によってサイズが拡張される配列で、動的配列、可変長配列と呼ばれる。  
+通常の配列はサイズ拡張不可で静的配列、固定長配列と呼ばれる。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+void print(vector<double>& V) {
+    for(int i = 0; i < V.size(); i++) {
+        cout << V[i] << " ";
+    }
+    cout << endl;
+}
+
+int main()
+{
+    vector<double> V;
+
+    V.push_back(0.1);
+    V.push_back(0.2);
+    V.push_back(0.3);
+    V[2] = 0.4;
+    print(V);   // 0.1 0.2 0.4
+
+    V.insert(V.begin() + 2, 0.8);
+    print(V);  // 0.1 0.2 0.8 0.4
+
+    V.erase(V.begin() + 1);
+    print(V);  // 0.1 0.8 0.4
+
+    V.push_back(0.9);
+    print(V);  // 0.1 0.8 0.4 0.9
+    return 0;
+}
+```
+
+`vector<double> V;`により、double型要素を管理するベクタが生成される。  
+`vector`では以下の関数が定義されている(一部)。
+
+|関数名|機能|計算量|
+|---|---|---|
+|size() |ベクタの要素数を返す|$O(1)$|
+|push_back(x)|ベクタの最後に要素`x`を追加する|$O(1)$|
+|pop_back()  |ベクタの最終要素を削除する|$O(1)$|
+|begin()|ベクタの先頭要素を指すイテレータを返す|$O(1)$|
+|end()|ベクタの末尾(最終要素の次)を指すイテレータを返す|$O(1)$|
+|insert(p, x)|ベクタの`p`の位置に`x`を挿入する|$O(n)$|
+|erase(p)|ベクタの`p`の位置の要素を削除する|$O(n)$|
+|clear()|ベクタの全要素を削除する|$O(n)$|
+
+イテレータとはポインタのような物。  
+要素数がnのvectorに対する特定位置へのデータ挿入や削除は$O(n)$の計算量が必要になるので注意が必要。
+
+### list
+
+`list`は双方向連結リストを提供するSTL。  
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    list<char> L;
+
+    L.push_front('b');      // b
+    L.push_back('c');       // bc
+    L.push_front('a');      // abc
+
+    cout << L.front();      // a
+    cout << L.back();       // c
+
+    L.pop_front();          // bc
+    L.push_back('d');       // bcd
+
+    cout << L.front();      // b
+    cout << L.back() << endl;   // d
+    return 0;
+}
+```
+
+`list<char> L;`により、char型要素を管理する双方向連結リストが生成される。  
+`list`では以下の関数が定義されている(一部)。
+
+|関数名|機能|計算量|
+|---|---|---|
+|size()      |リストの要素数を返す|$O(1)$|
+|begin()     |リストの先頭要素を指すイテレータを返す|$O(1)$|
+|end()       |リストの末尾(最終要素の次)を指すイテレータを返す|$O(1)$|
+|push_front(x)|リストの先頭に要素`x`を追加する|$O(1)$|
+|push_back(x)|リストの最後に要素`x`を追加する|$O(1)$|
+|pop_front()  |リストの先頭要素を削除する|$O(1)$|
+|pop_back()  |リストの最終要素を削除する|$O(1)$|
+|insert(p, x)|リストの`p`の位置に`x`を挿入する|$O(1)$|
+|erase(p)    |リストの`p`の位置の要素を削除する|$O(1)$|
+|clear()     |リストの全要素を削除する|$O(n)$|
+
+`list`は`vector`と異なり、`[]`でインデックスを指定して要素にアクセスすることはできない。  
+イテレータを用いて順番にアクセスしていく必要がある。  
+`vector`とは異なり、要素の挿入は$O(1)$で行うことができる。  
+(双方向連結リストなので)
+

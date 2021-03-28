@@ -532,3 +532,58 @@ int main()
 `vector`とは異なり、要素の挿入は$O(1)$で行うことができる。  
 (双方向連結リストなので)
 
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_D&lang=ja)
+
+### 回答
+
+STLを使って解いた回答が以下。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using P = pair<int, int>;  // 2つの値を組にして管理する構造
+
+int main() {
+    int total = 0; // 水溜り総面積
+    stack<int> S1; // 水溜り面積計算用スタック
+    stack<P> S2;   // 各水溜り面積保持スタック
+                   //   first: 水溜り開始位置
+                   //   sedcond: 水溜り面積
+    char ch;
+    for (int idx = 0; cin >> ch; idx++) {
+        if (ch == '\\') {
+            S1.push(idx); // 水溜りの開始位置をpush
+        }
+        else if ((ch == '/') && (S1.size() > 0)) {
+            int start = S1.top();
+            S1.pop();              // 水溜りの開始位置を取得
+            int ans = idx - start; //水溜り終了位置 - 開始位置 = 面積
+            total += ans;          // 水溜り総面積に加算
+            while ((S2.size() > 0) && (S2.top().first > start)) {
+                // 水溜り面積保持スタックに要素がある、かつ
+                //  S1とS2の水溜り開始位置が一致するまで
+                // 水溜り面積を加算する
+                ans += S2.top().second;
+                S2.pop();
+            }
+            // 水溜り面積保持スタックにpush
+            S2.push(make_pair(start, ans));
+        }
+    }
+    cout << total << endl; // 水溜り総面積出力
+    cout << S2.size();     // 水溜り数出力
+    // listを使って順番に並べる
+    list<int> result;
+    while (S2.size() > 0) {
+        result.push_front(S2.top().second); S2.pop();
+    }
+    // イテレータで水溜り面積を順次出力
+    for (auto itr = result.begin(); itr != result.end(); itr++) {
+        cout << " " << *itr;
+    }
+    cout << endl;
+    return 0;
+}
+```

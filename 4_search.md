@@ -153,3 +153,123 @@ int main() {
 大きなデータでは初等整列で学んだソートアルゴリズムでは性能が良くないため、もっと高等的なソートアルゴリズムを使用する必要がある。  
 (高等整列は別途まとめる)
 
+## ハッシュ法
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_4_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_4_C&lang=ja)
+
+普通、ハッシュテーブル(辞書)はkeyとvalueを組みにして保存するが、この問題の場合は1つの文字列がkeyであり、value。  
+
+### 回答
+
+理解できていないことがいくつかあるが、重要なのは以下。
+- keyがなるべくユニークになること
+- ハッシュ関数の結果がコンフリクトした場合の処理  
+  (コンフリクト: 異なるkeyで同じidxが算出されること)
+
+コンフリクトの対処としては以下の2つの方法がある。
+- チェーン法  
+  ハッシュテーブル内の要素を連結リスト要素とし、コンフリクト発生時にリストを追加していく方法。  
+  探索時、該当idxのリスト先頭が期待する値と異なれば、リストを線形探索していく。  
+  コンフリクトが多くなると線形探索により計算量が増えていく。
+  リストに要素追加していくので格納可能な最大数に制限がない。
+- オープンアドレス法  
+  コンフリクト発生時、idxに二次ハッシュを加算する方法。  
+  格納可能な最大要素数が把握できないと使えない。  
+  格納するデータの総数は、ハッシュテーブルサイズの80～90%程度に抑えるとよいらしい。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+// ハッシュテーブルのサイズは素数である必要がある
+// ハッシュ関数で生成できないインデックスが出ないようにするため
+// nの最大数である1000000以上の素数とする
+constexpr int HASH_TABLE_LEN = 1046520;
+constexpr int STR_LEN = 16; // 文字列長
+constexpr int COM_LEN = 8;  // コマンド文字列長
+// グローバル変数は0で初期化されるので初期化処理不要
+char hash_tbl[HASH_TABLE_LEN][STR_LEN];
+
+int getChr(char ch) {
+    // 文字を数値に変換する
+    switch (ch) {
+    case 'A': return 1; break;
+    case 'C': return 2; break;
+    case 'G': return 3; break;
+    case 'T': return 4; break;
+    default: break;
+    }
+    return 0;
+}
+
+ll getKey(const char str[]) {
+    ll p = 1, key = 0;
+    for (int i = 0; i < strlen(str); i++) {
+        key += p * getChr(str[i]);
+        p *= 5; // なんで5を掛ける？ 理解できていない。
+    }
+    return key;
+}
+
+// ハッシュ関数
+int h1(ll key) { return key % HASH_TABLE_LEN; }
+int h2(ll key) { return 1 + (key % (HASH_TABLE_LEN - 1)); }
+// 最後に1を足すのは、インデックス算出結果が0になる可能性があるから。
+// (keyがHASH_TABLE_LENの倍数になると0になる)
+// 0になってしまうと関数呼び出し部のループが無限ループになってしまうので、
+// 最後に1を足して無限ループを回避する。
+// 調べると上記のように記載されたサイトが見つかるが、それならh1()も最後に
+// 1を加算した方がいいのでは？と思った。
+
+bool find(const char str[]) {
+    ll key = getKey(str); // 文字列を数値のkeyに変換
+    for (int i = 0;; i++) {
+        // h1()で出したidxに異なる文字列が格納されていたら
+        // h2()で出した数の分idxをずらしていく
+        int idx = (h1(key) + i * h2(key)) % HASH_TABLE_LEN;
+        // keyから導いたidxの値がstrと一致すればtrue
+        if (strcmp(hash_tbl[idx], str) == 0) return true;
+        // keyから導いたidxの値が空文字であればテーブルに存在しないのでfalse
+        else if (strlen(hash_tbl[idx]) == 0) return false;
+        else continue;
+    }
+    return false;
+}
+
+bool insert(const char str[]) {
+    ll key = getKey(str); // 文字列を数値のkeyに変換
+    for (int i = 0;; i++) {
+        // h1()で出したidxが使用済み、かつ異なる文字列が格納されていたら
+        // h2()で出した数の分idxをずらしていく
+        int idx = (h1(key) + i * h2(key)) % HASH_TABLE_LEN;
+        // keyから導いたidxの値がstrと一致すれば既に格納済み
+        if (strcmp(hash_tbl[idx], str) == 0) return true;
+        // keyから導いたidxの値が空文字であれば文字列をコピー
+        else if (strlen(hash_tbl[idx]) == 0) {
+            strncpy(hash_tbl[idx], str, STR_LEN - 1);
+            return true;
+        } else continue;
+    }
+    return false;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    char command[COM_LEN], str[STR_LEN];
+    for (int i = 0; i < n; i++) {
+        scanf("%s %s", command, str); // 入力数が多いので高速なscanf()を使用
+        // コマンドはinsertかfindしかないので1文字目で判断
+        if (command[0] == 'i') (void)insert(str);
+        else {
+            bool res = find(str);
+            if (res) cout << "yes" << endl;
+            else cout << "no" << endl;
+        }
+    }
+    return 0;
+}
+```

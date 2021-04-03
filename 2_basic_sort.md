@@ -10,8 +10,6 @@ tags: []
 ### 問題
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_A&lang=ja)
-![](pic/image-klp4dh1h.png)
-![](pic/image-klp4dzmf.png)
 
 ### 回答
 
@@ -77,7 +75,6 @@ int main() {
 ### 問題
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_A&lang=ja)
-![](pic/image-klud75j4.png)
 
 ### 回答
 
@@ -143,7 +140,6 @@ int main() {
 ### 問題
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_B&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_B&lang=ja)
-![](pic/image-klx3trmx.png)
 
 ### 回答
 
@@ -211,7 +207,6 @@ int main() {
 ### 問題
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_C&lang=ja)
-![](pic/image-klxf0lqo.png)
 
 ### 回答
 
@@ -296,8 +291,6 @@ int main()
 ### 問題
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_D&lang=ja)
-![](pic/image-klyqnz5b.png)
-![](pic/image-klyqoc0r.png)
 
 ### 回答
 

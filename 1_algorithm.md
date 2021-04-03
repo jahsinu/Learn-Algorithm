@@ -9,8 +9,6 @@ tags: []
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_D&lang=ja)
 
-![](pic/image-kloyqbwq.png)
-
 ## 悪い回答例
 
 以下は悪い例。  

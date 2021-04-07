@@ -275,3 +275,143 @@ int main() {
     return 0;
 }
 ```
+
+## 標準ライブラリによる探索
+
+### イテレータ
+
+イテレータはSTLのコンテナ要素に対して反復処理を行うためのオブジェクト。  
+コンテナ内の特定の位置を示すもの。  
+
+イテレータはどの種類のコンテナでも同じ方法で要素に順次アクセスできるのが特徴。  
+
+#### イテレータへのアクセス
+
+|関数名|機能|
+|--|--|
+|begin()|コンテナの先頭イテレータを返す|
+|end()|コンテナ末尾のイテレータ(最終要素の次の位置)を返す|
+
+以下の演算子でイテレータを操作できる。
+
+|演算子|機能|
+|--|--|
+|++|イテレータを次の要素に進める|
+|==, !=|2つのイテレータの位置を比較する|
+|=|イテレータの代入|
+|*|イテレータが示す位置の値を返す|
+
+上記の通り、イテレータの操作はほぼポインタと同じ感覚。  
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+void print(vector<int> v) {
+    for (auto it = v.begin(); it != v.end(); it++) {
+        cout << *it;
+    }
+    // イテレータの型を明示するなら以下
+    // vector<int>::iterator it;
+    // for (it = v.begin(); it != v.end(); it++) {
+    
+    cout << endl;
+    return;
+}
+
+int main()
+{
+    int N = 4;
+    vector<int> v;
+
+    for (int i = 0; i < N; i++) {
+        int x;
+        cin >> x;
+        v.push_back(x);
+    }
+    print(v);
+
+    auto it = v.begin();
+    *it = 3;    // 先頭要素 v[0] を 3 にする
+    it++;       // イテレータを進める
+    (*it)++;    // v[1] の値をインクリメント
+    print(v);
+
+    return 0;
+}
+```
+```bash
+# 入力
+2 0 1 4
+
+# 出力
+2014
+3114
+```
+
+### binary_search, lower_bound, upper_bound
+
+STLではbinary_search, lower_boud, upper_boundという二分探索に関するライブラリが用意されている。  
+
+### binary_search
+
+名前の通り二分探索を行う。  
+keyとして渡した値が存在するか否かを返す。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    vector<int> A = {1, 1, 2, 2, 2, 4, 5, 5, 6, 8, 8, 8, 10, 15};
+    int key1 = 5;
+    int key2 = 11;
+
+    auto itr_begin = A.begin();
+    auto itr_end = A.end();
+    cout << "key1: " << binary_search(itr_begin, itr_end, key1) << endl;
+    cout << "key2: " << binary_search(itr_begin, itr_end, key2) << endl;
+}
+```
+```bash
+# 出力
+key1: 1
+key2: 0
+```
+
+### lower_bound, upper_bound
+
+この2つはとても似ていて分かりづらい。  
+
+- lower_bound  
+  配列に二分探索を行い、指定したkey**以上**の要素のうち一番左側の要素のイテレータを返す。  
+- upper_bound  
+  配列に二分探索を行い、指定したkey**を超える**の要素のうち一番左側の要素のイテレータを返す。  
+
+二分探索を行う関数なので、検索対象の配列はソートされていることが前提であることに注意。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    vector<int> A = {1, 1, 2, 2, 2, 4, 5, 5, 6, 8, 8, 8, 10, 15};
+    int key = 2;
+
+    auto itr_begin = A.begin();
+    auto itr_end = A.end();
+    cout << "lower_bound: " << distance(itr_begin, lower_bound(itr_begin, itr_end, key)) << endl;
+    cout << "upper_bound: " << distance(itr_begin, upper_bound(itr_begin, itr_end, key)) << endl;
+}
+```
+```bash
+# 出力
+lower_bound: 2
+upper_bound: 5
+```
+
+lower_boundでは**2を含めた**要素の中の、一番左の位置`A[2]`の位置が返っている。  
+upper_boundでは**2を超えた**要素の中の、一番左の位置`A[5]`の位置が返っている。  
+(distanceは2つのポインタの距離を返す関数)

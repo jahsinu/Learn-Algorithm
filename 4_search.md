@@ -340,6 +340,7 @@ int main()
     return 0;
 }
 ```
+
 ```bash
 # 入力
 2 0 1 4

@@ -95,7 +95,7 @@ int main() {
 
 という制約を活かし、二分探索での探索を行う。
 
-### 回答
+### 解答
 
 ```cpp
 #include <bits/stdc++.h>
@@ -162,7 +162,7 @@ int main() {
 
 普通、ハッシュテーブル(辞書)はkeyとvalueを組みにして保存するが、この問題の場合は1つの文字列がkeyであり、value。  
 
-### 回答
+### 解答
 
 理解できていないことがいくつかあるが、重要なのは以下。
 
@@ -421,3 +421,76 @@ upper_bound: 5
 lower_boundでは**2を含めた**要素の中の、一番左の位置`A[2]`の位置が返っている。  
 upper_boundでは**2を超えた**要素の中の、一番左の位置`A[5]`の位置が返っている。  
 (distanceは2つのポインタの距離を返す関数)
+
+## 応用問題
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_4_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_4_D&lang=ja)
+
+### 解答
+
+トラックの最大積載量を増やすとトラックに詰める荷物が増えることから、二分探索を使用して答えを出すことができる。  
+
+まず、指定されたトラック台数と最大積載量で積める荷物の数を返す関数を用意する。  
+そして、その関数に二分探索で候補とした最大積載量の値を渡して、最小の最大積載量を探す。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+constexpr int NUM_PACKETS_MAX = 100000;     // 最大荷物数
+constexpr int PACKET_WEIGHT_MAX = 10000;    // 荷物の最大重量
+
+// 指定されたトラック台数と最大積載量で積める荷物の数を返す
+int check(vector<ll>& packets, int nb_tracks, ll max_capa) {
+  // 荷物のindex。
+  // トラック毎に初期化しないのでこの位置で初期化。
+  int idx = 0;
+  // 各トラックに荷物を積む
+  for (int track = 0; track < nb_tracks; track++) {
+    ll total = 0;
+    while (total + packets[idx] <= max_capa) {
+      total += packets[idx];
+      idx++;
+      // 積んだ荷物の数を返す 荷物を全部積めた場合
+      if (idx == packets.size()) return idx;
+    }
+  }
+  // 積んだ荷物の数を返す 荷物を全部積む前に最大積載量に達した場合
+  return idx;
+}
+
+// 荷物を積みきれる最大積載量を二分探索する
+int solve(vector<ll>& packets, int nb_tracks) {
+  ll left = 0;  // 最大積載量の最小値
+  ll right = NUM_PACKETS_MAX * PACKET_WEIGHT_MAX;  // 最大積載量の最大値
+  ll mid;
+  while (right - left > 1) {
+    mid = (left + right) / 2;
+    // 中間の最大積載量で荷物を積みきれるかチェック
+    int res = check(packets, nb_tracks, mid);
+    if (res >= packets.size()) {
+      // 積みきれる場合、最大積載量を減らしていく
+      right = mid;
+    } else {
+      // 積みきれなければ、最大積載量を増やしていく
+      left = mid;
+    }
+  }
+  return right;
+}
+
+int main() {
+  int nb_packets, nb_tracks;
+  cin >> nb_packets >> nb_tracks;
+  vector<ll> packets = vector<ll>(nb_packets);
+  for (int i = 0; i < nb_packets; i++) {
+    cin >> packets[i];
+  }
+  int res = solve(packets, nb_tracks);
+  cout << res << endl;
+  return 0;
+}
+```

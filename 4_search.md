@@ -458,7 +458,7 @@ int check(vector<ll>& packets, int nb_tracks, ll max_capa) {
       if (idx == packets.size()) return idx;
     }
   }
-  // 積んだ荷物の数を返す 荷物を全部積む前に最大積載量に達した場合
+  // 積んだ荷物の数を返す 荷物を全部積む前にトラックが尽きた場合
   return idx;
 }
 

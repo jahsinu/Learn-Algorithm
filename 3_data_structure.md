@@ -45,7 +45,7 @@ tags: []
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_A&lang=ja)
 
-### 回答
+### 解答
 
 スタックをClassで実装してみると以下のような感じ。  
 本来はスタックが空かどうかの確認(isEmpty())や、スタックが満杯かどうかの確認(isFull())も実装し、pop()やpush()時にエラー処理を行うべき。
@@ -111,7 +111,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_B&lang=ja)
 
-### 回答
+### 解答
 
 キューをClassで実装したのが以下。  
 キューの先頭が常にidx0になるようにすると、デキューの度に全要素の移動が発生し、計算量が多くなる。  
@@ -207,7 +207,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_C&lang=ja)
 
-### 回答
+### 解答
 
 連結リストをClassで実装したのが以下。  
 連結リストの先頭データは有効な値を持たないガードノードとする(下記ソース内の`nil`)。  
@@ -536,9 +536,9 @@ int main()
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_3_D&lang=ja)
 
-### 回答
+### 解答
 
-STLを使って解いた回答が以下。
+STLを使って解いた解答が以下。
 
 ```cpp
 #include <bits/stdc++.h>

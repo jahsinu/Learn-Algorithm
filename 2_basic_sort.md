@@ -11,7 +11,7 @@ tags: []
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_A&lang=ja)
 
-### 回答
+### 解答
 
 問題で示されたアルゴリズムをC++で実装し、標準入力からのデータ取得と画面出力処理を追加すると  
 以下になる。  
@@ -76,7 +76,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_A&lang=ja)
 
-### 回答
+### 解答
 
 問題で示されたアルゴリズムをC++で実装し、標準入力からのデータ取得と画面出力処理を追加すると  
 以下になる。  
@@ -141,7 +141,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_B&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_B&lang=ja)
 
-### 回答
+### 解答
 
 問題で示されたアルゴリズムをC++で実装し、標準入力からのデータ取得と画面出力処理を追加すると  
 以下になる。  
@@ -208,7 +208,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_C&lang=ja)
 
-### 回答
+### 解答
 
 バブルソートは安定なソートアルゴリズムなので常に"Stable"。  
 選択ソートは安定ではないソートアルゴリズムなので、バブルソートの結果と比較して並びが異なっていれば"Not stable"とする。
@@ -292,7 +292,7 @@ int main()
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_2_D&lang=ja)
 
-### 回答
+### 解答
 
 数列Gは基本的には最終的に1になる減少数列であれば良いっぽい。  
 ただし $g_{n+1} = 3g_n + 1$ の数列を用いると計算量が $O^{1.25}$ になると予測されているのだそう。

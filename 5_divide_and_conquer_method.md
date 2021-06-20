@@ -69,7 +69,7 @@ int main() {
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_5_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_5_A&lang=ja)
 
-### 回答
+### 解答
 
 この問題は対象となる数列の要素数nの最大数が小さいので、全ての組み合わせを判定する全探索を使用できる。  
 要素ごとに 選択する/選択しない の2択(2通りの組み合わせ)となり、2通りの組み合わせを網羅する再帰関数の例は以下のような関数になる。  

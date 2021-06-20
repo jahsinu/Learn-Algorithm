@@ -9,7 +9,7 @@ tags: []
 
 [https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_D&lang=ja)
 
-## 悪い回答例
+## 悪い解答例
 
 以下は悪い例。  
 この問題では最大で20万件のデータが与えられる。  
@@ -42,7 +42,7 @@ int main() {
 }
 ```
 
-## 計算量を考慮した回答例
+## 計算量を考慮した解答例
 
 一番利益が出るケースの利益を出すので、特定時点の価格の以前の最安値が重要。  
 以下のようにデータを読み込みながら最安価格と最高利益を更新していくと、  

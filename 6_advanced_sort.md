@@ -31,13 +31,13 @@ using namespace std;
 int cnt;
 
 void merge(vector<unsigned int>& S, int left, int mid, int right) {
-	// 左側部分配列を別領域にコピー
+    // 左側部分配列を別領域にコピー
     int n1 = mid - left;
     vector<unsigned int> L(n1 + 1);
     copy(S.begin() + left, S.begin() + left + n1, L.begin());
     L[n1] = INFTY;  // ガードとして取り得ない最大値を設定
 
-	// 右側部分配列を別領域にコピー
+    // 右側部分配列を別領域にコピー
     int n2 = right - mid;
     vector<unsigned int> R(n2 + 1);
     copy(S.begin() + mid, S.begin() + mid + n2, R.begin());
@@ -47,9 +47,9 @@ void merge(vector<unsigned int>& S, int left, int mid, int right) {
     int r_idx = 0;
     for (int i = left; i < right; i++) {
         cnt++;
-		// 右側配列と左側配列を比較し、小さい方をSに設定
+        // 右側配列と左側配列を比較し、小さい方をSに設定
         if (L[l_idx] <= R[r_idx]) {
-			// 同値の場合、Lを使用することで安定ソートになる
+            // 同値の場合、Lを使用することで安定ソートになる
             S[i] = L[l_idx];
             l_idx++;
         } else {
@@ -65,9 +65,9 @@ void mergeSort(vector<unsigned int>& S, int left, int right) {
     int mid;
     if (left + 1 < right) {
         mid = (left + right) / 2;
-        mergeSort(S, left, mid);	// 配列の左側部分配列をマージソート
-        mergeSort(S, mid, right);	// 配列の右側部分配列をマージソート
-        merge(S, left, mid, right);	// ソート済み部分配列をマージ
+        mergeSort(S, left, mid);    // 配列の左側部分配列をマージソート
+        mergeSort(S, mid, right);   // 配列の右側部分配列をマージソート
+        merge(S, left, mid, right); // ソート済み部分配列をマージ
     }
 
     return;

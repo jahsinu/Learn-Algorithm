@@ -281,3 +281,134 @@ int main() {
     return 0;
 }
 ```
+
+## 計数ソート
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_6_A&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_6_A&lang=ja)
+
+### 解答
+
+以下の詳細な解説のページがわかりやすい。  
+記載されているように、数値の最大値分のサイズを持つ数列Cが必要となるため、サイズに比例するメモリと計算量(O(n+k))が必要になる。  
+
+### 詳細な解説
+
+[https://judge.u-aizu.ac.jp/onlinejudge/commentary.jsp?id=ALDS1_6_A&pattern=post&type=general&filter=Algorithm](https://judge.u-aizu.ac.jp/onlinejudge/commentary.jsp?id=ALDS1_6_A&pattern=post&type=general&filter=Algorithm)
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+#define VMAX 10000
+
+void CountingSort(vector<unsigned int>& A, vector<unsigned int>& B) {
+    /* Cのindexが最大値である10000を表現できなくてはいけないので、
+       VMAX + 1の要素数が必要 */
+    vector<unsigned int> C(VMAX + 1);
+    for (int i = 0; i < A.size(); i++) {
+        C[0] = 0;
+    }
+
+    /* C[i]にiの出現回数を記録する */
+    for (int i = 0; i < A.size(); i++) {
+        C[A[i]]++;
+    }
+
+    /* C[i]にi以下の数の出現数を記録する */
+    for (int i = 1; i < C.size(); i++) {
+        C[i] = C[i] + C[i - 1];
+    }
+
+    /* 数列Aの後ろからチェックすることで安定なソートになる */
+    for (int i = A.size() - 1; i >= 0; i--) {
+        B[C[A[i]] - 1] = A[i];
+        C[A[i]]--;
+    }
+
+    return;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<unsigned int> A(n);
+    for(int i = 0; i < A.size(); i++) {
+        scanf("%u", &A[i]);
+    }
+
+    vector<unsigned int> B(n);
+    CountingSort(A, B);
+
+    for(int i = 0; i < B.size(); i++) {
+        if(i) cout << " ";
+        cout << B[i];
+    }
+    cout << endl;
+    
+    return 0;
+}
+```
+
+## 標準ライブラリによる整列
+
+STLでは配列やコンテナの要素に対する整列を行うsort関数が提供されている。
+
+### sort
+
+`sort()`はクイックソートをベースとする高速なソート(O(nlogn))。  
+最悪ケースで計算量がO(n^2)になる弱点も対策されている。  
+ただし安定なソートではないことに注意。
+
+安定したソートを行う場合は`stable_sort()`を使用する。  
+`stable_sort()`はマージソートがベース。  
+計算量はO(nlogn)だが、`sort()`より速度に劣り、よりメモリを必要とする。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    vector<int> v;
+    int a[5];
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        v.push_back(x);
+        a[i] = x;
+    }
+
+    // vctorの場合、先頭イテレータ、末尾イテレータを指定
+    sort(v.begin(), v.end());
+    // 配列の場合、先頭ポインタ、末尾ポインタを指定
+    sort(a, a + n);
+
+    cout << "vectorの場合: ";
+    for (int i = 0; i < v.size(); i++) {
+        if (i) cout << " ";
+        cout << v[i];
+    }
+    cout << endl;
+
+    cout << "配列の場合:   ";
+    for (int i = 0; i < n; i++) {
+        if (i) cout << " ";
+        cout << a[i];
+    }
+    cout << endl;
+
+    return 0;
+}
+```
+```sh
+# 入力
+5
+5 3 4 1 2
+# 出力
+vectorの場合: 1 2 3 4 5
+配列の場合:   1 2 3 4 5
+```

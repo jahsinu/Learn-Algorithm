@@ -412,3 +412,92 @@ int main() {
 vectorの場合: 1 2 3 4 5
 配列の場合:   1 2 3 4 5
 ```
+
+## 反転数
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_5_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_5_D&lang=ja)
+
+### 解答
+
+この問題は本当にバブルソートで行おうとすると時間内に出力を得ることができない。  
+
+実際に反転した際にカウントしていく方法をとることができないので、別の反転数の数え方を使用する。  
+例えば以下の数列Aをソートする場合、`A[0]` から `A[idx - 1]` の範囲にある `A[idx]` より大きい値の数を `C[idx]` とすると、`C[idx]` の総和 `10` が数列Aの反転数となる。
+
+| idx   | 0 | 1 | 2 | 3 | 4 | 5 |
+|-------|---|---|---|---|---|---|
+| A     | 5 | 3 | 6 | 2 | 1 | 4 |
+| C     | 0 | 1 | 0 | 3 | 4 | 2 |
+
+この方法をマージソートに応用する。  
+
+以下のマージソート実装の `merge()` では、`L[l_idx]` より小さな `R[r_idx]` を `S[i]` に代入した際に、`L` に残っている要素数 `n1 - l_idx` が反転数となる。  
+各再帰処理内で反転数を計算し、各反転数を加算していく。
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef long long llong;
+#define INFTY 0xFFFFFFFF
+
+llong merge(vector<unsigned int>& S, int left, int mid, int right) {
+    int n1 = mid - left;
+    vector<unsigned int> L(n1 + 1);
+    copy(S.begin() + left, S.begin() + left + n1, L.begin());
+    L[n1] = INFTY;
+
+    int n2 = right - mid;
+    vector<unsigned int> R(n2 + 1);
+    copy(S.begin() + mid, S.begin() + mid + n2, R.begin());
+    R[n2] = INFTY;
+
+    llong cnt = 0;      // 反転数
+    int l_idx = 0;
+    int r_idx = 0;
+    for (int i = left; i < right; i++) {
+        // 右側配列と左側配列を比較し、小さい方をSに設定
+        if (L[l_idx] <= R[r_idx]) {
+            S[i] = L[l_idx];
+            l_idx++;
+        } else {
+            S[i] = R[r_idx];
+            r_idx++;
+            cnt += n1 - l_idx;      // 反転数を算出
+        }
+    }
+
+    return cnt;
+}
+
+llong mergeSort(vector<unsigned int>& S, int left, int right) {
+    int mid;
+    llong v1, v2, v3;
+    if (left + 1 < right) {
+        mid = (left + right) / 2;
+        v1 = mergeSort(S, left, mid);
+        v2 = mergeSort(S, mid, right);
+        v3 = merge(S, left, mid, right);
+        return v1 + v2 + v3;
+    }
+
+    return 0;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<unsigned int> S(n);
+    for(int i=0; i<n; i++) cin >> S[i];
+
+    llong ans = mergeSort(S, 0, S.size());
+    cout << ans << endl;
+    return 0;
+}
+```
+
+## 最小コストソート
+
+[TODO]

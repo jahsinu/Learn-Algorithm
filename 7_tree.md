@@ -129,7 +129,7 @@ func main() {
 	wr := bufio.NewWriter(os.Stdout)
 	for i := 0; i < n; i++ {
 		fmt.Fprintf(
-            wr,
+			wr,
 			"node %d: parent = %d, depth = %d, %s, %s\n",
 			i,
 			T[i].parent,

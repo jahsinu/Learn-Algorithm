@@ -6,3 +6,4 @@
 [4. 探索](4_search.md)  
 [5. 分割統治法](5_divide_and_conquer_method.md)  
 [6. 高等的整列](6_advanced_sort.md)  
+[7. 木](7_tree.md)  

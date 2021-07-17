@@ -87,51 +87,51 @@ func getKindStr(i int) string {
 }
 
 func main() {
-	sc := bufio.NewScanner(os.Stdin)
-	sc.Split(bufio.ScanWords)
-	sc.Scan()
-	n, _ := strconv.Atoi(sc.Text())
+	s := bufio.NewScanner(os.Stdin)
+	s.Split(bufio.ScanWords)
+	s.Scan()
+	n, _ := strconv.Atoi(s.Text())
 	for i := 0; i < n; i++ {
 		// NIL(-1)で初期化
 		T[i].parent, T[i].left, T[i].right, T[i].depth = NIL, NIL, NIL, NIL
 	}
 
-	var id, degree, left, child int
 	for i := 0; i < n; i++ {
-		sc.Scan()
-		id, _ = strconv.Atoi(sc.Text()) // node番号取得
-		sc.Scan()
-		degree, _ = strconv.Atoi(sc.Text()) // 子供の数を取得
-		for j := 0; j < degree; j++ {
-			sc.Scan()
-			child, _ = strconv.Atoi(sc.Text()) // 子供のnode番号取得
+		s.Scan()
+		id, _ := strconv.Atoi(s.Text()) // node番号取得
+		s.Scan()
+		d, _ := strconv.Atoi(s.Text()) // 子供の数を取得
+		var l int
+		for j := 0; j < d; j++ {
+			s.Scan()
+			c, _ := strconv.Atoi(s.Text()) // 子供のnode番号取得
 			if j == 0 {
-				T[id].left = child // 一番左の子を設定
+				T[id].left = c // 一番左の子を設定
 			} else {
-				T[left].right = child // 子の右の兄弟を設定
+				T[l].right = c // 子の右の兄弟を設定
 			}
-			left = child
-			T[child].parent = id // 子の親を設定
+			l = c
+			T[c].parent = id // 子の親を設定
 		}
 	}
 
 	// 根のnode番号を取得
-	var root int
+	var r int
 	for i := 0; i < n; i++ {
 		if T[i].parent == NIL {
-			root = i
+			r = i
 			break
 		}
 	}
 
 	// 各nodeの深さ情報を設定
-	setDepth(root, 0)
+	setDepth(r, 0)
 
 	// 多量のデータを書き出すのでWriter使用
-	wr := bufio.NewWriter(os.Stdout)
+	w := bufio.NewWriter(os.Stdout)
 	for i := 0; i < n; i++ {
 		fmt.Fprintf(
-			wr,
+			w,
 			"node %d: parent = %d, depth = %d, %s, %s\n",
 			i,
 			T[i].parent,
@@ -139,8 +139,7 @@ func main() {
 			getKindStr(i),
 			getChildrenStr(i))
 	}
-	wr.Flush()
-
+	w.Flush()
 	return
 }
 ```
@@ -204,41 +203,40 @@ func setDepth(i int, d int) {
 }
 
 // 深さの情報を設定する
-func setHeight(id int) int {
+func setHeight(i int) int {
 	var lh, rh int
-	if T[id].left != NIL {
-		lh = setHeight(T[id].left) + 1
+	if T[i].left != NIL {
+		lh = setHeight(T[i].left) + 1
 	}
-	if T[id].right != NIL {
-		rh = setHeight(T[id].right) + 1
+	if T[i].right != NIL {
+		rh = setHeight(T[i].right) + 1
 	}
-	T[id].height = int(math.Max(float64(lh), float64(rh)))
-	return T[id].height
+	T[i].height = int(math.Max(float64(lh), float64(rh)))
+	return T[i].height
 }
 
 // 兄弟のノードIDを取得する
-func getSibling(id int) int {
-	parent := T[id].parent
-	if parent != NIL {
-		if T[parent].left == id {
-			return T[parent].right
-		} else {
-			return T[parent].left
-		}
+func getSibling(i int) int {
+	if T[i].parent == NIL {
+		return NIL
 	}
-	return NIL
+	if p := T[i].parent; T[p].left == i {
+		return T[p].right
+	} else {
+		return T[p].left
+	}
 }
 
 // 節点の子の数を取得する
-func getDegree(id int) int {
-	deg := 0
-	if T[id].left != NIL {
-		deg++
+func getDegree(i int) int {
+	var d int
+	if T[i].left != NIL {
+		d++
 	}
-	if T[id].right != NIL {
-		deg++
+	if T[i].right != NIL {
+		d++
 	}
-	return deg
+	return d
 }
 
 // ノード種別の文字列を取得する
@@ -252,23 +250,23 @@ func getKindStr(i int) string {
 }
 
 func main() {
-	sc := bufio.NewScanner(os.Stdin)
-	sc.Split(bufio.ScanWords)
-	sc.Scan()
-	n, _ := strconv.Atoi(sc.Text())
+	s := bufio.NewScanner(os.Stdin)
+	s.Split(bufio.ScanWords)
+	s.Scan()
+	n, _ := strconv.Atoi(s.Text())
 	for i := 0; i < n; i++ {
 		// NIL(-1)で初期化
-		T[i].parent, T[i].left, T[i].right, T[i].depth = NIL, NIL, NIL, NIL
+		T[i].parent, T[i].left, T[i].right = NIL, NIL, NIL
+		T[i].depth, T[i].height = NIL, NIL
 	}
 
-	var id int
 	for i := 0; i < n; i++ {
-		sc.Scan()
-		id, _ = strconv.Atoi(sc.Text()) // node番号取得
-		sc.Scan()
-		T[id].left, _ = strconv.Atoi(sc.Text()) // 左の子を設定
-		sc.Scan()
-		T[id].right, _ = strconv.Atoi(sc.Text()) // 右の子を設定
+		s.Scan()
+		id, _ := strconv.Atoi(s.Text()) // node番号取得
+		s.Scan()
+		T[id].left, _ = strconv.Atoi(s.Text()) // 左の子を設定
+		s.Scan()
+		T[id].right, _ = strconv.Atoi(s.Text()) // 右の子を設定
 		if T[id].left != NIL {
 			T[T[id].left].parent = id
 		}
@@ -278,23 +276,24 @@ func main() {
 	}
 
 	// 根のnode番号を取得
-	var root int
+	var r int
 	for i := 0; i < n; i++ {
 		if T[i].parent == NIL {
-			root = i
+			r = i
 			break
 		}
 	}
 
 	// 各nodeの深さ情報を設定
-	setDepth(root, 0)
+	setDepth(r, 0)
 	// 各nodeの高さ情報を設定
-	setHeight(root)
+	setHeight(r)
 
 	// 多量のデータを書き出すのでWriter使用
-	wr := bufio.NewWriter(os.Stdout)
+	w := bufio.NewWriter(os.Stdout)
 	for i := 0; i < n; i++ {
-		fmt.Fprintf(wr,
+		fmt.Fprintf(
+			w,
 			"node %d: parent = %d, sibling = %d, degree = %d, depth = %d, height = %d, %s\n",
 			i,
 			T[i].parent,
@@ -304,8 +303,7 @@ func main() {
 			T[i].height,
 			getKindStr(i))
 	}
-	wr.Flush()
-
+	w.Flush()
 	return
 }
 ```

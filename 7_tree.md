@@ -307,3 +307,118 @@ func main() {
 	return
 }
 ```
+
+## 木の巡回
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_7_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_7_C&lang=ja)
+
+### 解答
+
+3種類の巡回方法を、再帰関数で実装する。
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
+const (
+	MAX = 32
+	NIL = -1
+)
+
+type Node struct {
+	parent int // 親
+	left   int // 左の子
+	right  int // 右の子
+}
+
+var T [MAX]Node
+var wr = bufio.NewWriter(os.Stdout)
+
+func preorder(i int) {
+	if i == NIL {
+		return
+	}
+	fmt.Fprintf(wr, " %d", i)	// 根節点
+	preorder(T[i].left)			// 左部分木
+	preorder(T[i].right)		// 右部分木
+	return
+}
+
+func inorder(i int) {
+	if i == NIL {
+		return
+	}
+	inorder(T[i].left)			// 左部分木
+	fmt.Fprintf(wr, " %d", i)	// 根節点
+	inorder(T[i].right)			// 右部分木
+	return
+}
+
+func postorder(i int) {
+	if i == NIL {
+		return
+	}
+	postorder(T[i].left)		// 左部分木
+	postorder(T[i].right)		// 右部分木
+	fmt.Fprintf(wr, " %d", i)	// 根節点
+	return
+}
+
+func main() {
+	s := bufio.NewScanner(os.Stdin)
+	s.Split(bufio.ScanWords)
+	s.Scan()
+	n, _ := strconv.Atoi(s.Text())
+	for i := 0; i < n; i++ {
+		// NIL(-1)で初期化
+		T[i].parent, T[i].left, T[i].right = NIL, NIL, NIL
+	}
+
+	for i := 0; i < n; i++ {
+		s.Scan()
+		id, _ := strconv.Atoi(s.Text()) // node番号取得
+		s.Scan()
+		T[id].left, _ = strconv.Atoi(s.Text()) // 左の子を設定
+		s.Scan()
+		T[id].right, _ = strconv.Atoi(s.Text()) // 右の子を設定
+		if T[id].left != NIL {
+			T[T[id].left].parent = id
+		}
+		if T[id].right != NIL {
+			T[T[id].right].parent = id
+		}
+	}
+
+	// 根のnode番号を取得
+	var r int
+	for i := 0; i < n; i++ {
+		if T[i].parent == NIL {
+			r = i
+			break
+		}
+	}
+
+	fmt.Fprintf(wr, "Preorder\n")
+	preorder(r)
+	fmt.Fprintf(wr, "\n")
+
+	fmt.Fprintf(wr, "Inorder\n")
+	inorder(r)
+	fmt.Fprintf(wr, "\n")
+
+	fmt.Fprintf(wr, "Postorder\n")
+	postorder(r)
+	fmt.Fprintf(wr, "\n")
+
+	wr.Flush()
+	return
+}
+```

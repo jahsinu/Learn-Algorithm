@@ -422,3 +422,109 @@ func main() {
 	return
 }
 ```
+
+## 木巡回の応用: 木の復元
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_7_D&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_7_D&lang=ja)
+
+### 解答
+
+preorder巡回の順番で節点を1つずつ訪問する。  
+各節点を根とする左部分木、右部分木ができるがこれはinorder巡回の結果から判断できる。
+
+例えば以下のようなpreprder、inorder巡回結果が与えられた場合、
+- preorder  
+  ```
+  [1 2 3 4 5 6 7 8 9]
+  ```
+
+- inorder  
+  ```
+  [3 2 5 4 6 1 8 7 9]
+  ```
+
+#### 1を根とする  
+```
+[3 2 5 4 6  {1}   8 7 9]
+|左部分木 |     |右部分木|
+```
+
+#### 2を根とする
+左部分木を対象に、2を根とする部分木に分ける。
+```
+    [3      {2}   5 4 6]
+|左部分木 |     |右部分木|
+```
+#### 3を根とする
+それ以上部分木ができないので、木の左端の節点に達したことがわかる。
+
+#### 4を根とする
+```
+    [5      {4}     6]
+|左部分木 |     |右部分木|
+```
+
+上記のように再帰的に部分木を辿っていくことで、木構造を復元できる。
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
+const (
+	MAX = 44
+	NIL = -1
+)
+
+var result []int = make([]int, 0, MAX)
+var pre [MAX]int
+var in [MAX]int
+var pos int
+var n int
+
+func reconstruction(sin []int) {
+	if len(sin) < 1 {
+		return
+	}
+	// inの値を取得
+	r := pre[pos]
+	pos++
+	// pre内での位置を取得
+	var d int
+	for i, v := range sin {
+		if v == r {
+			d = i
+		}
+	}
+	reconstruction(sin[:d])   // 左部分木の再帰処理
+	reconstruction(sin[d+1:]) // 右部分木の再帰処理
+	result = append(result, r)
+	return
+}
+
+func main() {
+	s := bufio.NewScanner(os.Stdin)
+	s.Split(bufio.ScanWords)
+	s.Scan()
+	n, _ = strconv.Atoi(s.Text())
+	for i := 0; i < n; i++ {
+		s.Scan()
+		pre[i], _ = strconv.Atoi(s.Text())
+	}
+	for i := 0; i < n; i++ {
+		s.Scan()
+		in[i], _ = strconv.Atoi(s.Text())
+	}
+	reconstruction(in[:n])
+	fmt.Println(strings.Trim(fmt.Sprint(result), "[]"))
+	return
+}
+```

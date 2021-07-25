@@ -323,12 +323,12 @@ func (n *Node) deleteNode(z *Node) {
 		x = y.right
 	}
 
-    // 子から親のポインタ繋ぎ変え
+	// 子から親のポインタ繋ぎ変え
 	if x != nil {
 		x.parent = y.parent // xの親として、yの親を設定
 	}
 
-    // 親から子のポインタ繋ぎ変え
+	// 親から子のポインタ繋ぎ変え
 	if y.parent == nil {
 		*n = *x // yが根の場合、xを木の根とする
 	} else if y == y.parent.left {

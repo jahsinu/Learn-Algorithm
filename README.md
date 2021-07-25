@@ -8,4 +8,4 @@
 [6. 高等的整列](6_advanced_sort.md)  
 [7. 木](7_tree.md)  
 [8. 二分探索木](8_binary_search_tree.md)  
-
+[9. ヒープ](9_heap.md)

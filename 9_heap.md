@@ -140,3 +140,97 @@ func main() {
 	fmt.Fprintf(wr, "\n")
 }
 ```
+
+## 優先度付きキュー
+
+## 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_9_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_9_C&lang=ja)
+
+## 解答
+
+優先度付きキューは、追加した順ではなく優先度の順で要素を取り出すキュー。  
+出題のキューは、キー値の降順に要素が取り出される優先度付きキュー。  
+
+`insert()` では、要素の追加と、親要素との比較/入れ替えを行う。  
+`extract()` では、根要素の取得、 `maxHeapify()` を行い、末尾データの削除を行う。
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
+const MAX = 2000004
+const INFTY = 0x7fffffff
+
+var sc = bufio.NewScanner(os.Stdin)
+var wr = bufio.NewWriter(os.Stdout)
+
+type priority_queue []int
+
+func parent(key int) int { return key / 2 }
+func left(i int) int     { return 2 * i }
+func right(i int) int    { return 2*i + 1 }
+func NewPriorityQueue(s int) priority_queue {
+	return make([]int, 1, s)
+}
+
+func (s *priority_queue) insert(key int) {
+	*s = append(*s, key) // ヒープに要素追加
+	// 親が追加要素より小さければ入れ替える
+	for i := len(*s) - 1; i > 1 && (*s)[parent(i)] < (*s)[i]; i = parent(i) {
+		(*s)[parent(i)], (*s)[i] = (*s)[i], (*s)[parent(i)]
+	}
+}
+
+func (s *priority_queue) extract() (r int) {
+	// 根になっている値を取得し、ヒープの末尾の値を設定する
+	r, (*s)[1] = (*s)[1], (*s)[len(*s)-1]
+	// maxヒープ化する
+	s.maxHeapify(1)
+	// ヒープ末尾の要素を削除
+	*s = (*s)[:len(*s)-1]
+	return
+}
+
+func (s *priority_queue) maxHeapify(i int) {
+	l, r := left(i), right(i)
+	// 左の子、自分、右の子で値が最大のノードを選ぶ
+	var largest int
+	if l < len(*s) && (*s)[l] > (*s)[i] {
+		largest = l
+	} else {
+		largest = i
+	}
+	if r < len(*s) && (*s)[r] > (*s)[largest] {
+		largest = r
+	}
+
+	if largest != i { // iの子の方が値が大きい場合
+		(*s)[i], (*s)[largest] = (*s)[largest], (*s)[i] // 値を入れ替え
+		s.maxHeapify(largest)                           // 再帰呼び出し
+	}
+}
+
+func main() {
+	defer wr.Flush()
+	var S priority_queue = NewPriorityQueue(MAX)
+	sc.Split(bufio.ScanWords)
+
+	for sc.Scan() && sc.Text() != "end" {
+		switch sc.Text() {
+		case "insert":
+			sc.Scan()
+			k, _ := strconv.Atoi(sc.Text())
+			S.insert(k)
+		case "extract":
+			fmt.Fprintf(wr, "%d\n", S.extract())
+		}
+	}
+}
+```

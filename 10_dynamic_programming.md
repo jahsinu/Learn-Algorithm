@@ -150,3 +150,96 @@ func main() {
 	fmt.Fprintf(wr, "%d\n", fib2[n])
 }
 ```
+
+## 最長共通部分列
+
+### 問題
+
+[https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_10_C&lang=ja](https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_10_C&lang=ja)
+
+### 解答
+
+サイズがそれぞれ m，n の数列 X, Y のLCS(最長共通部分列)を求める場合、XmとYnのLCSを求める。  
+
+- Xm == Yn の場合  
+  Xm-1とYn-1のLCSにXm(or Yn)を連結した物が、XmとYnのLCSとなる。  
+  例えば、X = {a, b, c, d, a}, Y = {a, b, c, b, a} の場合、  
+  Xm-1とYn-1のLCSである {a, b, c} に {a} を加え、{a, b, c, a}が
+  XmとYnのLCSとなる。  
+
+- Xm != Yn の場合  
+  Xm-1とYnのLCS、XmとYn-1のLCSのうちどちらか長いほうがLCSとなる。  
+  例えば、X = {a, b, c, c, d, b }, Y = {a, b, c, b, a} の場合、  
+
+  - Xm-1 {a, b, c, c, d} と Yn {a, b, c, b, a} のLCS  
+    {a, b, c}
+
+  - Xm {a, b, c, c, d, b} とYn-1 {a, b, c, b} のLCS  
+    {a, b, c, b}  
+
+  となるのでXmとYn-1のLCSが、XmとYnのLCSとなる。
+
+このアルゴリズムはX、Yの各要素 `X[i]`、`Y[j]`にも適用できる。  
+このことから二次元配列 `C[m+1][n+1]` を用意してLCSの部分問題の解を求めていく。
+
+- `C[m+1][n+1]`  
+  `C[i][j]` を `X[i]` と `Y[j]` のLCSの長さとする二次元配列
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
+const MAX = 1000
+
+var sc = bufio.NewScanner(os.Stdin)
+var wr = bufio.NewWriter(os.Stdout)
+
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func lcs(X string, Y string) int {
+	X, Y = " "+X, " "+Y		// idx1から文字列が開始するようにしておく
+	m := len(X)
+	n := len(Y)
+
+	var c [MAX + 1][MAX + 1]int
+	var maxl int
+	for i := 1; i < m; i++ {		// 内部でi-1を参照するので1から開始
+		for j := 1; j < n; j++ {	// 内部でj-1を参照するので1から開始
+			if X[i] == Y[j] {
+				c[i][j] = c[i-1][j-1] + 1
+			} else {
+				c[i][j] = max(c[i-1][j], c[i][j-1])
+			}
+			maxl = max(maxl, c[i][j])
+		}
+	}
+	return int(maxl)
+}
+
+func main() {
+	defer wr.Flush()
+	sc.Split(bufio.ScanWords)
+
+	sc.Scan()
+	q, _ := strconv.Atoi(sc.Text())
+	for i := 0; i < q; i++ {
+		sc.Scan()
+		X := sc.Text()
+		sc.Scan()
+		Y := sc.Text()
+		maxl := lcs(X, Y)
+		fmt.Fprintf(wr, "%d\n", maxl)
+	}
+}
+```
